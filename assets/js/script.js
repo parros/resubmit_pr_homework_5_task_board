@@ -1,6 +1,11 @@
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
+const addTask = document.getElementById('open-modal-btn')
+const taskDescription = document.getElementById('task-description')
+const taskDate = document.getElementById('task-due-date')
+const taskTitle = document.getElementById('task-title')
+const todoBody = document.getElementById('todo-cards')
 
 // function that generates a unique task id
 function generateTaskId() {
@@ -13,32 +18,57 @@ function generateTaskId() {
 }
 
 // Todo: create a function to create a task card
-function createTaskCard(generateTaskId, taskTitle, taskDescription) {
+
+$( function() {
+    $( taskDate ).datepicker();
+  } )
+
+function createTaskCard() {
     // Create a div element for the task card
     const taskCard = document.createElement('div');
     taskCard.classList.add('task-card');
 
     // Create elements for task details
     const titleElement = document.createElement('h3');
-    titleElement.textContent = taskTitle;
+    titleElement.innerText = taskTitle.value;
+
+    const dateElement = document.createElement('h4');
+    dateElement.innerText =taskDate.value;
 
     const descriptionElement = document.createElement('p');
-    descriptionElement.textContent = taskDescription;
+    descriptionElement.innerText = taskDescription.value;
 
     // Add task details to the task card
     taskCard.appendChild(titleElement);
+    taskCard.appendChild(dateElement);
     taskCard.appendChild(descriptionElement);
 
     // Set a unique ID for the task card
-    taskCard.id = taskId;
-
-    return taskCard;
+    taskCard.id = generateTaskId();
+    console.log(taskCard)
+    todoBody.appendChild(taskCard)
 }
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-
+    // Open the modal when the button is clicked
+    $('#open-modal-btn').click(function() {
+        $('#task-modal').show();
+    });
+    
+    // Save task when the form is submitted
+    $('#task-form').submit(function(event) {
+        event.preventDefault();
+        const taskName = $('#task-name').val();
+            
+        // Add task creation logic here (e.g., save to a list, update UI, etc.)
+        createTaskCard()
+        // Close modal after saving
+        $('#task-modal').hide();
+    });
 }
+
+addTask.addEventListener('click', renderTaskList())
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
@@ -61,20 +91,3 @@ $(document).ready(function () {
 });
 
 
-$(document).ready(function() {
-    // Open the modal when the button is clicked
-    $('#open-modal-btn').click(function() {
-        $('#task-modal').show();
-    });
-
-    // Save task when the form is submitted
-    $('#task-form').submit(function(event) {
-        event.preventDefault();
-        const taskName = $('#task-name').val();
-        
-        // Add task creation logic here (e.g., save to a list, update UI, etc.)
-
-        // Close modal after saving
-        $('#task-modal').hide();
-    });
-});
