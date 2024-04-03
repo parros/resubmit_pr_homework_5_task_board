@@ -7,6 +7,7 @@ const taskDate = document.getElementById('task-due-date')
 const taskTitle = document.getElementById('task-title')
 const todoBody = document.getElementById('todo-cards')
 
+
 // function that generates a unique task id
 function generateTaskId() {
 
@@ -38,14 +39,31 @@ function createTaskCard() {
     const descriptionElement = document.createElement('p');
     descriptionElement.innerText = taskDescription.value;
 
+    const btnElement = document.createElement('button')
+    btnElement.innerText = 'close'
+    btnElement.setAttribute('class', 'closeBtn')
+    btnElement.onclick = handleDeleteTask
+
+
     // Add task details to the task card
     taskCard.appendChild(titleElement);
     taskCard.appendChild(dateElement);
     taskCard.appendChild(descriptionElement);
+    taskCard.appendChild(btnElement);
+
 
     // Set a unique ID for the task card
+    const taskData = {
+        title: taskTitle.value,
+        date: taskDate.value,
+        description: taskDescription.value
+    }
+
     taskCard.id = generateTaskId();
-    console.log(taskCard)
+    btnElement.setAttribute('id', `closebtn${taskCard.id}`);
+
+    localStorage.setItem(taskCard.id, JSON.stringify(taskData))
+    console.log(JSON.parse(localStorage.getItem(taskData.id)))
     todoBody.appendChild(taskCard)
 }
 
@@ -63,6 +81,12 @@ function renderTaskList() {
             
         // Add task creation logic here (e.g., save to a list, update UI, etc.)
         createTaskCard()
+        // Make cards draggable
+        $('.task-card').draggable({
+            revert: true,
+            helper: 'clone',
+            cursor: 'move'
+        });
         // Close modal after saving
         $('#task-modal').hide();
     });
@@ -77,8 +101,13 @@ function handleAddTask(event){
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
+    // Get the parent <li> element of the button clicked
+    const taskItem = this.parentNode;
 
+    // Remove the task item from the task list
+    taskItem.remove();    
 }
+
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
