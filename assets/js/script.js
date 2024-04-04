@@ -18,6 +18,16 @@ function generateTaskId() {
 
 }
 
+// save/load local storage
+function loadProjectsFromLocalStorage() {
+    const savedProjects = JSON.parse(localStorage.getItem('projects')) || []
+    return savedProjects
+}
+
+function saveProjectsToLocalStorage(projectsData) {
+    localStorage.setItem('projects', JSON.stringify(projectsData))
+}
+
 // Todo: create a function to create a task card
 
 $( function() {
@@ -41,7 +51,6 @@ function createTaskCard() {
 
     const btnElement = document.createElement('button')
     btnElement.innerText = 'close'
-    btnElement.setAttribute('class', 'closeBtn')
     btnElement.onclick = handleDeleteTask
 
 
@@ -51,6 +60,7 @@ function createTaskCard() {
     taskCard.appendChild(descriptionElement);
     taskCard.appendChild(btnElement);
 
+    const savedProjects = loadProjectsFromLocalStorage()
 
     // Set a unique ID for the task card
     const taskData = {
@@ -58,12 +68,12 @@ function createTaskCard() {
         date: taskDate.value,
         description: taskDescription.value
     }
-
     taskCard.id = generateTaskId();
-    btnElement.setAttribute('id', `closebtn${taskCard.id}`);
 
-    localStorage.setItem(taskCard.id, JSON.stringify(taskData))
-    console.log(JSON.parse(localStorage.getItem(taskData.id)))
+    savedProjects.push(taskData)
+
+    saveProjectsToLocalStorage(savedProjects)
+
     todoBody.appendChild(taskCard)
 }
 
@@ -114,9 +124,19 @@ function handleDrop(event, ui) {
 
 }
 
+
+
+
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
 
 });
+
+
+// function handleProjectFormSubmit(event) {
+//     event.preventDefault()
+
+//     const projectName
+// }
 
 
