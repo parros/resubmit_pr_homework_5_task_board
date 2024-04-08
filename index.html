@@ -22,9 +22,25 @@
   </header>
   <div class="container">
     <div class="text-center mb-5">
-      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
+      <!-- data-bs-toggle="modal" causing errors -->
+      <button class="btn btn-success"  data-bs-target="#formModal">Add Task</button>
     </div>
     <!-- Todo: Create a modal with a form to add tasks -->
+      <div id="task-modal" class = 'modal'>
+        <h4>Add Task</h4>
+        <span class="close">&times;</span>
+        <form id="task-form">
+          <ul class = "list-group list-group-flush">
+            <li class="list-group-item">Title</li>
+            <input id = 'taskTitle' class = 'form-control mb-3' placeholder="Task Title" autocomplete="off" type="text"/>
+            <li class="list-group-item">Date</li>
+            <input id = 'taskDueDate' class = 'form-control mb-3' placeholder="Task Due Date" autocomplete="off" type="text"/>
+            <li class="list-group-item">Description</li>
+            <input id = 'taskDescription' class = 'form-control mb-3' placeholder="Task Description" autocomplete="off" type="text"/>
+            <button type="submit" id="submit">Add Task</button>
+          </ul>
+        </form>
+      </div>
     <div class="row swim-lanes text-center justify-content-between">
       <div class="col-12 col-lg-4 d-flex">
         <div id="to-do" class="card border-light mb-3 lane flex-grow-1">
