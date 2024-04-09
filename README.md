@@ -12,7 +12,7 @@ N/A
 
 ## Usage
 
-N/A
+Cards can be dragged to different lanes for when the status of the task changes. To Do and In Progress tasks will change to yellow if due date is within a day or red if past due.
 
 ## Credits
 
