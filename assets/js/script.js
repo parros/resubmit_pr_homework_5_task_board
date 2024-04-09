@@ -98,20 +98,17 @@ function handleAddTask(event) {
     // Colors card according to date
     taskColor()
 
-
     renderTaskList()
 
 // Reset form
     taskTitleInputEl.val('')
     taskDateInputEl.val('')
     taskDescriptionInputEl.val('')
-
 }
 
 // Get tasks from local storage
 function loadTasksFromLocalStorage() {
     const savedTasks = JSON.parse(localStorage.getItem("tasks")) || []
-    console.log(savedTasks)
     return savedTasks
 }
 
