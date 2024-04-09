@@ -52,3 +52,7 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+.swim-lane {
+  height: 100%
+}

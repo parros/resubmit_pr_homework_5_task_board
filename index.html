@@ -23,7 +23,7 @@
   <div class="container">
     <div class="text-center mb-5">
       <!-- data-bs-toggle="modal" causing errors -->
-      <button class="btn btn-success"  data-bs-target="#formModal">Add Task</button>
+      <button class="add-btn btn btn-success"  data-bs-target="#formModal">Add Task</button>
     </div>
     <!-- Todo: Create a modal with a form to add tasks -->
       <div id="task-modal" class = 'modal'>
@@ -50,7 +50,7 @@
             <h2 class="card-title mb-1">To Do</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="todo-cards"></div>
+            <div id="todo-cards" class="swim-lane"></div>
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
             <h2 class="card-title mb-1">In Progress</h2>
           </div>
           <div class="card-body bg-light">
-            <div id="in-progress-cards"></div>
+            <div id="in-progress-cards" class="swim-lane"></div>
           </div>
         </div>
         </div>
@@ -70,7 +70,7 @@
               <h2 class="card-title mb-1">Done</h2>
             </div>
             <div class="card-body bg-light">
-              <div id="done-cards"></div>
+              <div id="done-cards" class="swim-lane"></div>
           </div>
           </div>
       </div>
