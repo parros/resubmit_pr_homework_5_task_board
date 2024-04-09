@@ -1,6 +1,3 @@
-// Retrieve tasks and nextId from localStorage
-let taskList = JSON.parse(localStorage.getItem("tasks"));
-
 // Task info
 const taskTitleInputEl = $('#taskTitle')
 const taskDateInputEl = $('#taskDueDate')
@@ -42,7 +39,7 @@ function renderTaskList() {
     todoListEl.empty()
     inProgressListEl.empty()
     doneListEl.empty()
-
+    
     // Render cards in lane matching with card status
     for (const taskData of savedTasks) {
         const cardEl = createTaskCard(taskData)
@@ -113,7 +110,8 @@ function handleAddTask(event) {
 
 // Get tasks from local storage
 function loadTasksFromLocalStorage() {
-    const savedTasks = taskList || []
+    const savedTasks = JSON.parse(localStorage.getItem("tasks")) || []
+    console.log(savedTasks)
     return savedTasks
 }
 
@@ -139,7 +137,6 @@ function handleDeleteTask(event) {
     }
 
     saveTasksToLocalStorage(updatedTasks)
-
     renderTaskList()
 }
 
