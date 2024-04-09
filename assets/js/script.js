@@ -1,17 +1,17 @@
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
-let nextId = JSON.parse(localStorage.getItem("nextId"));
-const addTaskBtn = $('.add-btn')
-const taskDisplayEl = $('.swim-lanes')
+
+// Task info
 const taskTitleInputEl = $('#taskTitle')
 const taskDateInputEl = $('#taskDueDate')
 const taskDescriptionInputEl = $('#taskDescription')
-const taskForm = $('#task-form')
+
+// Task status
 const todoListEl = $('#todo-cards')
 const inProgressListEl = $('#in-progress-cards')
 const doneListEl = $('#done-cards')
 
-// Todo: create a function to generate a unique task id
+// Generates a unique task id
 function generateTaskId() {
     const timestamp = new Date().getTime()
     const randomNum = Math.floor(Math.random()*1000)
@@ -19,7 +19,7 @@ function generateTaskId() {
     return taskId
 }
 
-// Todo: create a function to create a task card
+// Creates a task card
 function createTaskCard(task) {
     const newCard = $(`
         <div class="card draggable" data-id="${task.id}" data-status="${task.status}" data-deadline="${task.deadline}">
@@ -32,17 +32,18 @@ function createTaskCard(task) {
     </div>
     `)
     return newCard
-
 }
 
-// Todo: create a function to render the task list and make cards draggable
+// Renders the task list and make cards draggable
 function renderTaskList() {
     const savedTasks = loadTasksFromLocalStorage()
 
+    // Clear lists
     todoListEl.empty()
     inProgressListEl.empty()
     doneListEl.empty()
 
+    // Render cards in lane matching with card status
     for (const taskData of savedTasks) {
         const cardEl = createTaskCard(taskData)
 
@@ -54,26 +55,31 @@ function renderTaskList() {
             doneListEl.append(cardEl)
         }
     }
+
+    // Makes card draggable
     $( ".draggable" ).draggable({
         stack: '.swim-lanes'
     })
-
-
 }
 
-// Todo: create a function to handle adding a new task
+// Handles adding a new task
 function handleAddTask(event) {
     event.preventDefault()
 
-    // get current saved projects
+    // Get current saved tasks
     const savedTasks = loadTasksFromLocalStorage()
-    // get form field values
+
+    // Get form field values
     const taskTitle = taskTitleInputEl.val()
     const taskDate = taskDateInputEl.val()
     const taskDescription = taskDescriptionInputEl.val()
 
+    // Can't submit empty fields
+    if (taskTitle === '' || taskDate === ''|| taskDescription === '') {
+        return
+    }
 
-
+    // Combines tasks info into an array
     const newTask = {
         id: generateTaskId(),
         title: taskTitle,
@@ -82,56 +88,72 @@ function handleAddTask(event) {
         status: 'todo',
         deadline: 'far'
     }
+
+    // Hides modal after submit
     $('#task-modal').hide()
 
+    // Saves new task info with old task info
     savedTasks.push(newTask)
 
+    // Saves all tasks to local storage
     saveTasksToLocalStorage(savedTasks)
+
+    // Colors card according to date
     taskColor()
+
+
     renderTaskList()
 
-// reset form
+// Reset form
     taskTitleInputEl.val('')
     taskDateInputEl.val('')
     taskDescriptionInputEl.val('')
 
 }
 
-
+// Get tasks from local storage
 function loadTasksFromLocalStorage() {
-    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || []
+    const savedTasks = taskList || []
     return savedTasks
 }
 
-
+// Saves tasks to local storage
 function saveTasksToLocalStorage(tasksData) {
     localStorage.setItem('tasks', JSON.stringify(tasksData))
 }
 
 
-// Todo: create a function to handle deleting a task
+// Handles deleting a task
 function handleDeleteTask(event) {
+    // Gets the card of the button being deleted
     const cardId = $(event.target).closest('.card').data('id')
 
     const savedTasks = loadTasksFromLocalStorage()
     const updatedTasks =[]
 
+    // Takes out the card array that was in local storage
     for (const taskData of savedTasks) {
         if (cardId != taskData.id){
             updatedTasks.push(taskData)
         }
     }
+
     saveTasksToLocalStorage(updatedTasks)
 
     renderTaskList()
 }
 
+// Colors task card if close to date or overdue
 function taskColor() {
     const savedTasks = loadTasksFromLocalStorage()
     const currentDate = dayjs().format('MM/DD/YYYY')
+
+    // Gets date of task and current date for comparing
     for (const taskData of savedTasks) {
         const taskDate = dayjs(taskData.date)
         const differenceInHours = taskDate.diff(currentDate, 'hours')
+
+        // Changes card info based on how close in hours
         if (differenceInHours <= 24){
             if (differenceInHours < 0){
                 taskData.deadline = 'late'
@@ -143,7 +165,7 @@ function taskColor() {
     saveTasksToLocalStorage(savedTasks)
 }
 
-// Todo: create a function to handle dropping a task into a new status lane
+// Handles dropping a task into a new status lane
 function handleDrop(event, ui) {
     $( ".swim-lane" ).droppable({
         drop: function(event, ui) {
@@ -152,6 +174,7 @@ function handleDrop(event, ui) {
             const taskId = $(card).data('id')
             const savedTasks = loadTasksFromLocalStorage()
 
+            // Checks Id for task that was dropped and changes dropped task's status to match lane
             for (const taskData of savedTasks) {
                 if (taskData.id == taskId){
                     taskData.status = targetListId
@@ -164,26 +187,28 @@ function handleDrop(event, ui) {
     })
 }
 
+// Opens and closes modal form
 function openModal (){
-    // open modal
+
     $('#task-modal').show()
-    // close modal
+
     $('.close').click(function () {
         $('#task-modal').hide();
     });
 }
 
-// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+// When the page loads, renders the task list, adds event listeners, makes lanes droppable, and makes the due date field a date picker
 $(document).ready(function () {
-
+    // Date picker for adding tasks
     taskDateInputEl.datepicker()
 
-    addTaskBtn.on('click', openModal)
-    taskForm.on('submit', handleAddTask)
-
-    renderTaskList()
-    handleDrop()
+    // Event listeners
+    $('.add-btn').on('click', openModal)
+    $('#task-form').on('submit', handleAddTask)
     $('.swim-lanes').on('click', '.delete-btn', handleDeleteTask)
 
+    //functions
+    renderTaskList()
+    handleDrop()
     taskColor()
 });
