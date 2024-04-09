@@ -56,3 +56,15 @@ body {
 .swim-lane {
   height: 100%
 }
+
+.card[data-deadline='late'] {
+  background-color: red;
+}
+
+.card[data-deadline='near'] {
+  background-color: yellow;
+}
+
+.card[data-status='done'] {
+  background-color: white;
+}

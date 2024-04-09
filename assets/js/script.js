@@ -22,7 +22,7 @@ function generateTaskId() {
 // Todo: create a function to create a task card
 function createTaskCard(task) {
     const newCard = $(`
-        <div class="card draggable" data-id="${task.id}" data-status="${task.status}">
+        <div class="card draggable" data-id="${task.id}" data-status="${task.status}" data-deadline="${task.deadline}">
       <div class="card-body">
         <h5 class="card-title">${task.title}</h5>
         <p class="card-date">${task.date}</p>
@@ -32,6 +32,7 @@ function createTaskCard(task) {
     </div>
     `)
     return newCard
+
 }
 
 // Todo: create a function to render the task list and make cards draggable
@@ -56,7 +57,8 @@ function renderTaskList() {
     $( ".draggable" ).draggable({
         stack: '.swim-lanes'
     })
-    
+
+
 }
 
 // Todo: create a function to handle adding a new task
@@ -77,14 +79,15 @@ function handleAddTask(event) {
         title: taskTitle,
         date: taskDate,
         description: taskDescription,
-        status: 'todo'
+        status: 'todo',
+        deadline: 'far'
     }
     $('#task-modal').hide()
 
     savedTasks.push(newTask)
 
     saveTasksToLocalStorage(savedTasks)
-
+    taskColor()
     renderTaskList()
 
 // reset form
@@ -121,26 +124,36 @@ function handleDeleteTask(event) {
     saveTasksToLocalStorage(updatedTasks)
 
     renderTaskList()
-
 }
 
-
+function taskColor() {
+    const savedTasks = loadTasksFromLocalStorage()
+    const currentDate = dayjs().format('MM/DD/YYYY')
+    for (const taskData of savedTasks) {
+        const taskDate = dayjs(taskData.date)
+        const differenceInHours = taskDate.diff(currentDate, 'hours')
+        if (differenceInHours <= 24){
+            if (differenceInHours < 0){
+                taskData.deadline = 'late'
+            } else {
+                taskData.deadline = 'near'
+            }
+        }
+    }
+    saveTasksToLocalStorage(savedTasks)
+}
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     $( ".swim-lane" ).droppable({
         drop: function(event, ui) {
-            console.log(event)
             const targetListId = event.target.id.replace('-cards', '')
             const card = ui.draggable[0]
             const taskId = $(card).data('id')
-            console.log(targetListId, taskId)
             const savedTasks = loadTasksFromLocalStorage()
 
             for (const taskData of savedTasks) {
-
                 if (taskData.id == taskId){
- 
                     taskData.status = targetListId
                 }
             }
@@ -172,4 +185,5 @@ $(document).ready(function () {
     handleDrop()
     $('.swim-lanes').on('click', '.delete-btn', handleDeleteTask)
 
+    taskColor()
 });
