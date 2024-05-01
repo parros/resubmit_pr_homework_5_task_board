@@ -5,7 +5,9 @@
 I created this task board <a href="https://parros.github.io/resubmit_pr_homework_5_task_board/" target="_blank">webpage</a> to add project tasks, manage their progress and track my overall project progress.
 ![PR_homework_5_task_board_img](https://github.com/parros/PR_homework_5_task_board/assets/161364350/a9a5edea-a780-4b91-8e3c-c0b11f099f3b)
 
-## Installation
+<a href=#license>Click here</a>
+
+## <span id=install>Installation</span>
 
 N/A
 
@@ -17,6 +19,6 @@ Cards can be dragged to different lanes for when the status of the task changes.
 
 N/A
 
-## License
+## <span id=license>License</span>
 
 N/A
